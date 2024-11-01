@@ -159,10 +159,6 @@ class CfdMeshRefinement:
         if shape is None:
             shape = Part.Shape()
         obj.Shape = shape
-        if FreeCAD.GuiUp:
-            vobj = obj.ViewObject
-            vobj.Transparency = 20
-            vobj.ShapeColor = (1.0, 0.4, 0.0)  # Orange
 
 
 class _CfdMeshRefinement:
@@ -185,6 +181,8 @@ class ViewProviderCfdMeshRefinement:
         self.Object = vobj.Object
         self.standard = coin.SoGroup()
         vobj.addDisplayMode(self.standard, "Standard")
+        vobj.Transparency = 20
+        vobj.ShapeColor = (1.0, 0.4, 0.0)  # Orange
 
     def getDisplayModes(self, obj):
         modes = []
@@ -200,7 +198,7 @@ class ViewProviderCfdMeshRefinement:
         analysis_obj = CfdTools.getParentAnalysisObject(obj)
         if analysis_obj and not analysis_obj.Proxy.loading:
             if prop == 'Shape':
-                # Updates to the shape should be taken care of via links in 
+                # Updates to the shape should be taken care of via links in
                 # ShapeRefs
                 pass
             else:

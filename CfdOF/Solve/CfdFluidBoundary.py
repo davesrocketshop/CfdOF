@@ -405,25 +405,6 @@ class CfdFluidBoundary:
         if shape is None:
             shape = Part.Shape()
         obj.Shape = shape
-        self.updateBoundaryColors(obj)
-
-    def updateBoundaryColors(self, obj):
-        if FreeCAD.GuiUp:
-            vobj = obj.ViewObject
-            vobj.Transparency = 20
-            if obj.BoundaryType == 'wall':
-                vobj.ShapeColor = (0.1, 0.1, 0.1)  # Dark grey
-            elif obj.BoundaryType == 'inlet':
-                vobj.ShapeColor = (0.0, 0.0, 1.0)  # Blue
-            elif obj.BoundaryType == 'outlet':
-                vobj.ShapeColor = (1.0, 0.0, 0.0)  # Red
-            elif obj.BoundaryType == 'open':
-                vobj.ShapeColor = (0.0, 1.0, 1.0)  # Cyan
-            elif (obj.BoundaryType == 'constraint') or \
-                 (obj.BoundaryType == 'baffle'):
-                vobj.ShapeColor = (0.5, 0.0, 1.0)  # Purple
-            else:
-                vobj.ShapeColor = (1.0, 1.0, 1.0)  # White
 
     def __getstate__(self):
         return None
@@ -473,7 +454,25 @@ class ViewProviderCfdFluidBoundary:
         self.standard = coin.SoGroup()
         vobj.addDisplayMode(self.standard, "Standard")
         #self.ViewObject.Transparency = 95
-        return
+        self.updateBoundaryColors(vobj.Object)
+
+    def updateBoundaryColors(self, obj):
+        if FreeCAD.GuiUp:
+            vobj = obj.ViewObject
+            vobj.Transparency = 20
+            if obj.BoundaryType == 'wall':
+                vobj.ShapeColor = (0.1, 0.1, 0.1)  # Dark grey
+            elif obj.BoundaryType == 'inlet':
+                vobj.ShapeColor = (0.0, 0.0, 1.0)  # Blue
+            elif obj.BoundaryType == 'outlet':
+                vobj.ShapeColor = (1.0, 0.0, 0.0)  # Red
+            elif obj.BoundaryType == 'open':
+                vobj.ShapeColor = (0.0, 1.0, 1.0)  # Cyan
+            elif (obj.BoundaryType == 'constraint') or \
+                 (obj.BoundaryType == 'baffle'):
+                vobj.ShapeColor = (0.5, 0.0, 1.0)  # Purple
+            else:
+                vobj.ShapeColor = (1.0, 1.0, 1.0)  # White
 
     def getDisplayModes(self, obj):
         modes = []
@@ -489,7 +488,7 @@ class ViewProviderCfdFluidBoundary:
         analysis_obj = CfdTools.getParentAnalysisObject(obj)
         if analysis_obj and not analysis_obj.Proxy.loading:
             if prop == 'Shape':
-                # Updates to the shape should be taken care of via links in 
+                # Updates to the shape should be taken care of via links in
                 # ShapeRefs
                 pass
             elif prop == 'ShapeRefs':
